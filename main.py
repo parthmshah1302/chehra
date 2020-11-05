@@ -7,10 +7,10 @@ import math
 n=400
 nosofmatrices=4
 # Opening the image
-img1 = Image.open('chehra/sampleimg/img1.jpg')
-img2 = Image.open('chehra/sampleimg/img2.jpg')
-img3 = Image.open('chehra/sampleimg/img3.jpg')
-img4 = Image.open('chehra/sampleimg/img4.jpg')
+img1 = Image.open('chehra/yalefaces/yalefaces/subject05.wink')
+img2 = Image.open('chehra/yalefaces/yalefaces/subject06.leftlight')
+img3 = Image.open('chehra/yalefaces/yalefaces/subject07.sleepy')
+img4 = Image.open('chehra/yalefaces/yalefaces/subject10.glasses')
 
 # Resizing
 resized_img1=img1.resize((n,n))
@@ -60,11 +60,11 @@ aMatrix=np.column_stack((b1_,b2_,b3_,b4_))
 #img1.show()
 
 plt.imshow(b1, cmap='gray',vmin=0, vmax=255)
-#plt.show()
+plt.show()
 # plt.imshow(meanmatrix, cmap='gray',vmin=0, vmax=255)
 # plt.show()
 plt.imshow(meandisplay, cmap='gray',vmin=0, vmax=50)
-#plt.show()
+plt.show()
 
 #Get transpose of aMatrix
 p = nosofmatrices
