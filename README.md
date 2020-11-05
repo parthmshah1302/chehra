@@ -1,4 +1,7 @@
-![e64d565a3c50ab0df18dfc01bbca9b96.png](:/5de5a159f80143ccbd13ffcb3465e12e)
+<div align="center">
+<img src="https://github.com/parthmshah1302/chehra/blob/master/screenshots/chehra.png">
+  
+</div>
 
 ## **Contributors:**
 - #### Malav Doshi AU1940017

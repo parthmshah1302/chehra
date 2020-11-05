@@ -7,10 +7,10 @@ import math
 n=400
 nosofmatrices=4
 # Opening the image
-img1 = Image.open('C:/Users/DEEPAK/Desktop/softwares+projects/FaceRecognition/chehra/sampleimg/img1.jpg')
-img2 = Image.open('C:/Users/DEEPAK/Desktop/softwares+projects/FaceRecognition/chehra/sampleimg/img2.jpg')
-img3 = Image.open('C:/Users/DEEPAK/Desktop/softwares+projects/FaceRecognition/chehra/sampleimg/img3.jpg')
-img4 = Image.open('C:/Users/DEEPAK/Desktop/softwares+projects/FaceRecognition/chehra/sampleimg/img4.jpg')
+img1 = Image.open('chehra/sampleimg/img1.jpg')
+img2 = Image.open('chehra/sampleimg/img2.jpg')
+img3 = Image.open('chehra/sampleimg/img3.jpg')
+img4 = Image.open('chehra/sampleimg/img4.jpg')
 
 # Resizing
 resized_img1=img1.resize((n,n))
