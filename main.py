@@ -48,7 +48,7 @@ b2_=b2_new-meanmatrix
 b3_=b3_new-meanmatrix
 b4_=b4_new-meanmatrix
 aMatrix=np.column_stack((b1_,b2_,b3_,b4_))
-print(meanmatrix)
+#print(meanmatrix)
 
 #print("A matrix: \n",aMatrix)
 
@@ -73,7 +73,7 @@ aMatrix_T = np.zeros((p,q))
 for i in range(0,p):
     for j in range(0,q):
         aMatrix_T[i][j] = aMatrix[j][i]
-print("TRANSPOSE: \n",aMatrix_T)
+#print("TRANSPOSE: \n",aMatrix_T)
 
 #A*A_t
 p = nosofmatrices
@@ -87,8 +87,8 @@ for i in range(0,p):
               multiply[i][j] = sum
               sum=0
 #print("A*A_T: \n",multiply)
-plt.imshow(multiply, interpolation='nearest')
-plt.show()
+#plt.imshow(multiply, interpolation='nearest')
+#plt.show()
 
 #SVD
 AtA = multiply
@@ -97,19 +97,80 @@ d = np.zeros((nosofmatrices,nosofmatrices))
 s = np.zeros((nosofmatrices,nosofmatrices))
 s1 = np.zeros((nosofmatrices,nosofmatrices))
 s1t = np.zeros((nosofmatrices,nosofmatrices))
+temp = np.zeros((nosofmatrices,nosofmatrices))
+zero= 1e-4
 pi = 3.141592654
 #zero=1e-4
 for i in range (0,n):
  for j  in range(0,n):
-   d[i][j]=a[i][j]
+   d[i][j]=AtA[i][j]
    s[i][j]=0
 
 for i in range(0,n):
    s[i][i]=1
 #do while loop in py
-do:
-   {
-   flag=0;
+flag=0
+i=0
+j=1
+max=math.fabs(d[0][1])
+for p in range(0,n):
+   for q in range(0,n):
+      if(p!=q):
+         if(max < math.fabs(d[p][q])):
+            max = math.fabs(d[p][q])
+            i=p
+            j=q
+if(d[i][i]==d[j][j]):
+   if(d[i][j] > 0): 
+      theta=pi/4 
+   else: 
+      theta=-pi/4
+else:
+   theta=0.5*math.atan(2*d[i][j]/(d[i][i]-d[j][j]))
+for p in range(0,n):
+   for q in range(0,n):
+      s1[p][q]=0
+      s1t[p][q]=0
+for p in range(0,n):
+   s1[p][p]=1
+   s1t[p][p]=1
+s1[i][i]=math.cos(theta)
+s1[j][j]=s1[i][i]
+s1[j][i]=math.sin(theta)
+s1[i][j]=-s1[j][i]
+s1t[i][i]=s1[i][i]
+s1t[j][j]=s1[j][j]
+s1t[i][j]=s1[j][i]
+s1t[j][i]=s1[i][j]
+
+for i in range(0,n):
+   for j in range(0,n):
+      temp[i][j]=0
+      for p in range(0,n):
+         temp[i][j]+=s1t[i][p]*d[p][j]
+
+for i in range(0,n):
+   for j in range(0,n):
+      d[i][j]=0
+      for p in range(0,n): 
+         d[i][j]+=temp[i][p]*s1[p][j]
+   
+for i in range(0,n):
+   for j in range(0,n):
+      temp[i][j]=0
+      for p in range(0,n):
+         temp[i][j]+=s[i][p]*s1[p][j]
+
+for i in range(0,n):
+   for j in range(0,n):
+      s[i][j]=temp[i][j]
+for i in range(0,n):
+   for j in range(0,n):
+      if(i!=j):
+         if(math.fabs(d[i][j] > zero)):
+            flag=1
+while(flag==1):
+   flag=0
    i=0
    j=1
    max=math.fabs(d[0][1])
@@ -117,16 +178,16 @@ do:
       for q in range(0,n):
          if(p!=q):
             if(max < math.fabs(d[p][q])):
-               max = math.fabs(d[p][q]);
+               max = math.fabs(d[p][q])
                i=p
                j=q
    if(d[i][i]==d[j][j]):
-      if(d[i][j] > 0) 
+      if(d[i][j] > 0): 
          theta=pi/4 
-      else 
+      else: 
          theta=-pi/4
-   else
-      theta=0.5*atan(2*d[i][j]/(d[i][i]-d[j][j]))
+   else:
+      theta=0.5*math.atan(2*d[i][j]/(d[i][i]-d[j][j]))
    for p in range(0,n):
       for q in range(0,n):
          s1[p][q]=0
@@ -167,15 +228,16 @@ do:
    for i in range(0,n):
       for j in range(0,n):
          if(i!=j):
-            if(f abs(d[i][j] > zero)):
+            if(math.fabs(d[i][j] > zero)):
                flag=1
-while(flag==1)
 
-print("The eigenvalues are \n”)
+
+print("The eigenvalues are \n")
 for i in range(0,n):
    print(d[i][i])
-print("\nThe corresponding eigenvectors are \n”);
+print("\nThe corresponding eigenvectors are \n")
 for j in range(0,n):
+   print("Eigen Vector->", j+1)
    for i in range(0,n):
       print(s[i][j])
-   print(s[n][j])
+   print("\n")
