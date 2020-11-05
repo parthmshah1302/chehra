@@ -1,6 +1,7 @@
 from PIL import Image, ImageOps
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 #HIGHER IS BETTER
 n=400
@@ -91,28 +92,32 @@ plt.show()
 
 #SVD
 AtA = multiply
-#include < stdio.h >
-#include < math.h >
 n= nosofmatrices
-
-for(i = 1;i <= n;i + +):
- for(j = 1; j <= n; j + +):
+d = np.zeros((nosofmatrices,nosofmatrices))
+s = np.zeros((nosofmatrices,nosofmatrices))
+s1 = np.zeros((nosofmatrices,nosofmatrices))
+s1t = np.zeros((nosofmatrices,nosofmatrices))
+pi = 3.141592654
+#zero=1e-4
+for i in range (0,n):
+ for j  in range(0,n):
    d[i][j]=a[i][j]
    s[i][j]=0
 
-for(i = 1;i <= n;i + +):
-   s[i][i]=1;
+for i in range(0,n):
+   s[i][i]=1
+#do while loop in py
 do:
    {
    flag=0;
-   i=1
-   j=2
-   #max=fabs(d[1][2])
-   for(p = 1; p <= n; p + +):
-      for(q = 1; q <= n; q + +):
+   i=0
+   j=1
+   max=math.fabs(d[0][1])
+   for p in range(0,n):
+      for q in range(0,n):
          if(p!=q):
-            if(max < fabs(d[p][q])):
-               max=fabs(d[p][q]);
+            if(max < math.fabs(d[p][q])):
+               max = math.fabs(d[p][q]);
                i=p
                j=q
    if(d[i][i]==d[j][j]):
@@ -122,55 +127,55 @@ do:
          theta=-pi/4
    else
       theta=0.5*atan(2*d[i][j]/(d[i][i]-d[j][j]))
-   for(p = 1; p <= n; p + +):
-      for(q = 1; q <= n; q + +):
+   for p in range(0,n):
+      for q in range(0,n):
          s1[p][q]=0
          s1t[p][q]=0
-   for(p = 1; p <= n; p + +):
+   for p in range(0,n):
       s1[p][p]=1
       s1t[p][p]=1
-   s1[i][i]=cos(theta)
+   s1[i][i]=math.cos(theta)
    s1[j][j]=s1[i][i]
-   s1[j][i]=sin(theta)
+   s1[j][i]=math.sin(theta)
    s1[i][j]=-s1[j][i]
    s1t[i][i]=s1[i][i]
    s1t[j][j]=s1[j][j]
    s1t[i][j]=s1[j][i]
    s1t[j][i]=s1[i][j]
 
-   for(i = 1;i <= n;i + +):
-      for(j = 1; j <= n; j + +):
+   for i in range(0,n):
+      for j in range(0,n):
          temp[i][j]=0
-         for(p = 1; p <= n; p + +):
+         for p in range(0,n):
             temp[i][j]+=s1t[i][p]*d[p][j]
 
-   for(i = 1;i <= n;i + +):
-      for(j = 1; j <= n; j + +):
+   for i in range(0,n):
+      for j in range(0,n):
          d[i][j]=0
-         for(p = 1; p <= n; p + +): 
+         for p in range(0,n): 
             d[i][j]+=temp[i][p]*s1[p][j]
       
-   for(i = 1;i <= n;i + +):
-      for(j = 1; j <= n; j + +):
+   for i in range(0,n):
+      for j in range(0,n):
          temp[i][j]=0
-         for(p = 1; p <= n; p + +):
+         for p in range(0,n):
             temp[i][j]+=s[i][p]*s1[p][j]
 
-   for(i = 1;i <= n;i + +):
-      for(j = 1; j <= n; j + +):
+   for i in range(0,n):
+      for j in range(0,n):
          s[i][j]=temp[i][j]
-   for(i = 1;i <= n;i + +):
-      for(j = 1; j <= n; j + +):
+   for i in range(0,n):
+      for j in range(0,n):
          if(i!=j):
             if(f abs(d[i][j] > zero)):
                flag=1
 while(flag==1)
 
 print("The eigenvalues are \n”)
-for(i = 1;i <= n;i + +):
+for i in range(0,n):
    print(d[i][i])
 print("\nThe corresponding eigenvectors are \n”);
-for(j = 1; j <= n; j + +):
-   for(i = 1;i < n;i + +):
+for j in range(0,n):
+   for i in range(0,n):
       print(s[i][j])
    print(s[n][j])
