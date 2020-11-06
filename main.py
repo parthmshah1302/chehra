@@ -32,6 +32,7 @@ for i in range(0,unique_people):
       b_1[i][j] = np.array(img_grey[i][j])
       plt.imshow(b_1[i][j], interpolation='nearest')
       #plt.show()
+
 # Converting the NxN matrix to (N^2)x1 matrix
 for i in range(0,unique_people):
    for j in range(0,similar_faces):
@@ -51,10 +52,10 @@ for i in range(0,unique_people):
 # print(bMean[0])
 
 #Average faces of each individual 
-for i in range (0,unique_people):
-   b1mean=bMean[i].reshape([n,n],order='F')
-   b1meanImg=Image.fromarray(b1mean)
-   b1meanImg.show()
+# TODO for i in range (0,unique_people):
+#    b1mean=bMean[i].reshape([n,n],order='F')
+#    b1meanImg=Image.fromarray(b1mean)
+#    b1meanImg.show()
 
 #Calculating the transpose of aMatrix
 p = nosofmatrices
@@ -81,7 +82,7 @@ for i in range(0,p):
 #plt.imshow(covarianceMat, interpolation='nearest')
 #plt.show()
 
-#SVD
+#Decomposing the Covariance using SVD
 AtA = covarianceMat
 n= nosofmatrices
 d = np.zeros((nosofmatrices,nosofmatrices))
@@ -95,7 +96,7 @@ for i in range (0,n):
  for j  in range(0,n):
    d[i][j]=AtA[i][j]
    s[i][j]=0
-#making s an identity matrix 
+#Converting s to an identity matrix 
 for i in range(0,n):
    s[i][i]=1
 flag=0
@@ -219,13 +220,18 @@ while(flag==1):
          if(i!=j):
             if(math.fabs(d[i][j] > zero)):
                flag=1
+
+sigmaMatrix = np.zeros((nosofmatrices,nosofmatrices))
 print("eigen values are:")
 for i in range(0,nosofmatrices):
    print(d[i][i])
-sigmaMatrix=np.sqrt(d)
+   if(d[i][i]<0):
+      d[i][i] *= (-1)
+   sigmaMatrix[i][j] = math.sqrt(d[i][i])
+   print(sigmaMatrix[i][j])
+
 #print("The Sigma Matrix is ",sigmaMatrix)
 # print("\nThe corresponding eigenvectors are \n")
-#TODO Why is i in range (0,n) instead of range (0,numberOfUniquePeople)
 # for j in range(0,n):
 #    print("Eigen Vector->", j+1)
 #    for i in range(0,n):
