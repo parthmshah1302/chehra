@@ -6,25 +6,27 @@ import math
 #HIGHER IS BETTER
 n=400
 nosofmatrices=4
+unique_people = 5
+similar_faces = 4
+img = [[0 for x in range(unique_people)] for y in range(similar_faces)] 
+
 # Opening the image
-img1 = Image.open('chehra/yalefaces/yalefaces/subject05.wink')
-img2 = Image.open('chehra/yalefaces/yalefaces/subject06.leftlight')
-img3 = Image.open('chehra/yalefaces/yalefaces/subject07.sleepy')
-img4 = Image.open('chehra/yalefaces/yalefaces/subject10.glasses')
+for i in range(0,5):
+   for j in range(0,4):
+      print(i," ",j)
+      img_path = "sampleimg\img"+ str(i+1)+ "." + str(j+1) + ".jpg"
+      img[i][j] = Image.open(img_path)
 
-# Resizing
-resized_img1=img1.resize((n,n))
-resized_img2=img2.resize((n,n))
-resized_img3=img3.resize((n,n))
-resized_img4=img4.resize((n,n))
-
+plt.imshow(img, cmap='gray',vmin=0, vmax=255)
+plt.show()
 # Converting to Grayscale
-img1_2 = ImageOps.grayscale(resized_img1)
-img2_2 = ImageOps.grayscale(resized_img2)
-img3_2 = ImageOps.grayscale(resized_img3)
-img4_2 = ImageOps.grayscale(resized_img4)
+img_grey = [[0 for x in range(unique_people)] for y in range(similar_faces)]
+for i in range(0,5):
+   for j in range(0,4):
+      img_grey[i][j] = ImageOps.grayscale(img[i][j])
 
-#img2.show()
+plt.imshow(img_grey, cmap='gray',vmin=0, vmax=255)
+plt.show()
 
 # Converting the image to NxN matrix
 b1 = np.array(img1_2)
@@ -105,10 +107,9 @@ for i in range (0,n):
  for j  in range(0,n):
    d[i][j]=AtA[i][j]
    s[i][j]=0
-
+#making s an identity matrix 
 for i in range(0,n):
    s[i][i]=1
-#do while loop in py
 flag=0
 i=0
 j=1
