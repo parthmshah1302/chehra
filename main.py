@@ -4,46 +4,46 @@ import matplotlib.pyplot as plt
 import math
 
 #HIGHER IS BETTER
-n=400
-nosofmatrices=4
+n=3
+nosofmatrices=20
 unique_people = 5
 similar_faces = 4
-img = [[0 for x in range(unique_people)] for y in range(similar_faces)] 
+img = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 
 # Opening the image
 for i in range(0,5):
    for j in range(0,4):
       print(i," ",j)
-      img_path = "sampleimg\img"+ str(i+1)+ "." + str(j+1) + ".jpg"
+      img_path = "sampleimg/img"+ str(i+1)+ "." + str(j+1) + ".jpg"
       img[i][j] = Image.open(img_path)
 
-plt.imshow(img, cmap='gray',vmin=0, vmax=255)
-plt.show()
 # Converting to Grayscale
-img_grey = [[0 for x in range(unique_people)] for y in range(similar_faces)]
+img_grey = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 for i in range(0,5):
    for j in range(0,4):
       img_grey[i][j] = ImageOps.grayscale(img[i][j])
-
-plt.imshow(img_grey, cmap='gray',vmin=0, vmax=255)
-plt.show()
-
+      
 # Converting the image to NxN matrix
-b1 = np.array(img1_2)
-b2 = np.array(img2_2)
-b3 = np.array(img3_2)
-b4 = np.array(img4_2)
+b = [[0 for x in range(similar_faces)] for y in range(unique_people)]
+for i in range(0,unique_people):
+   for j in range(0,similar_faces):
+      b[i][j] = np.array(img_grey[i][j])
+
+  
+for i in range(0,unique_people):
+   for j in range(0,similar_faces):
+      print("b=",b[i][j])
 
 # Converting the NxN matrix to N^2x1 matrix
-b1_new=b1.reshape((n*n,1))
-b2_new=b2.reshape((n*n,1))
-b3_new=b3.reshape((n*n,1))
-b4_new=b4.reshape((n*n,1))
+b_reshape = [[0 for x in range(similar_faces)] for y in range(unique_people)]
+for i in range(0,unique_people):
+   for j in range(0,similar_faces):
+      b_reshape[i][j] = b[i][j].reshape((n*n,1))
+      print("reshaped = ",b_reshape[i][j])
 
 # Calculating the mean matrix
-meanmatrix=(b1_new+b2_new+b3_new+b4_new)/nosofmatrices
-meandisplay=(b1+b2+b3+b4)/nosofmatrices
-
+sum = 0
+# for i in range()
 #TODO:Use for loop instead of column_stack
 b1_=b1_new-meanmatrix
 b2_=b2_new-meanmatrix
@@ -234,9 +234,10 @@ while(flag==1):
 
 
 print("The eigenvalues are \n")
-for i in range(0,n):
-   print(d[i][i])
+sigmaMatrix=d.sqrt()
+print("The Sigma Matrix is "+sigmaMatrix)
 print("\nThe corresponding eigenvectors are \n")
+#TODO Why is i in range (0,n) instead of range (0,numberOfUniquePeople)
 for j in range(0,n):
    print("Eigen Vector->", j+1)
    for i in range(0,n):
