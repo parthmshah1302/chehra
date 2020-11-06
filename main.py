@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 import math
    
 #Declarations
-n=400
+n=40
 nosofmatrices=20
 unique_people = 5
 similar_faces = 4
 
 img = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 
-# Opening the image
+# Storing the training set
 for i in range(0,5):
    for j in range(0,4):
       img_path = "sampleimg/img"+ str(i+1)+ "." + str(j+1) + ".jpg"
@@ -82,7 +82,7 @@ for i in range(0,p):
 #plt.imshow(covarianceMat, interpolation='nearest')
 #plt.show()
 
-#Decomposing the Covariance using SVD
+Decomposing the Covariance using SVD
 AtA = covarianceMat
 n= nosofmatrices
 d = np.zeros((nosofmatrices,nosofmatrices))
@@ -110,13 +110,16 @@ for p in range(0,n):
             max = math.fabs(d[p][q])
             i=p
             j=q
+#Finding rotational angle
 if(d[i][i]==d[j][j]):
    if(d[i][j] > 0): 
       theta=pi/4 
    else: 
       theta=-pi/4
 else:
+   #formula to be used for the the diagonal elements that are found equal
    theta=0.5*math.atan(2*d[i][j]/(d[i][i]-d[j][j]))
+#Computing S1 matrix (Transformation matrix)
 for p in range(0,n):
    for q in range(0,n):
       s1[p][q]=0
@@ -139,6 +142,7 @@ for i in range(0,n):
       for p in range(0,n):
          temp[i][j]+=s1t[i][p]*d[p][j]
 
+#Getting diagonal matrix 
 for i in range(0,n):
    for j in range(0,n):
       d[i][j]=0
@@ -159,6 +163,8 @@ for i in range(0,n):
       if(i!=j):
          if(math.fabs(d[i][j] > zero)):
             flag=1
+
+#Repeat steps above until D becomes diagonal.
 while(flag==1):
    flag=0
    i=0
@@ -178,6 +184,8 @@ while(flag==1):
          theta=-pi/4
    else:
       theta=0.5*math.atan(2*d[i][j]/(d[i][i]-d[j][j]))
+   
+   #Computing S1 matrix
    for p in range(0,n):
       for q in range(0,n):
          s1[p][q]=0
@@ -199,7 +207,8 @@ while(flag==1):
          temp[i][j]=0
          for p in range(0,n):
             temp[i][j]+=s1t[i][p]*d[p][j]
-
+   
+   #Getting diagonal matrix
    for i in range(0,n):
       for j in range(0,n):
          d[i][j]=0
@@ -220,15 +229,16 @@ while(flag==1):
          if(i!=j):
             if(math.fabs(d[i][j] > zero)):
                flag=1
-
+#Diagonal elements of D are the eigenvalues 
+#the columns of S are the corresponding eigenvectors.
 sigmaMatrix = np.zeros((nosofmatrices,nosofmatrices))
 print("eigen values are:")
 for i in range(0,nosofmatrices):
    print(d[i][i])
-   if(d[i][i]<0):
-      d[i][i] *= (-1)
-   sigmaMatrix[i][j] = math.sqrt(d[i][i])
-   print(sigmaMatrix[i][j])
+   # if(d[i][i]<0):
+   #    d[i][i] *= (-1)
+   # sigmaMatrix[i][j] = math.sqrt(d[i][i])
+   # print(sigmaMatrix[i][j])
 
 #print("The Sigma Matrix is ",sigmaMatrix)
 # print("\nThe corresponding eigenvectors are \n")
@@ -237,11 +247,11 @@ for i in range(0,nosofmatrices):
 #    for i in range(0,n):
 #       print(s[i][j])
 #    print("\n")
-V = np.zeros((nosofmatrices,nosofmatrices))
+V = np.zeros((nosofmatrices,nosofmatrices)) 
 for i in range(0,nosofmatrices):
    for j in range(0,nosofmatrices):
       V[i][j] = s[i][j]
-# print("V=", V)
+print("V matrix=", V)
 
 #Calculating the Projections of each Unique face
 bMeanT = [[0 for x in range(unique_people)] for y in range(n*n)]
@@ -253,6 +263,7 @@ projectionMatrix=[[0 for x in range(unique_people*similar_faces)] for y in range
 #    q = unique_people*similar_faces
 #    bMeanT = np.zeros((p,q))
 # print(p, q, bMean[0])
+
 for i in range(0, unique_people):
    bMean[i] = np.asarray(bMean[i])
 
