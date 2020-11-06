@@ -2,21 +2,22 @@ from PIL import Image, ImageOps
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-
-#HIGHER IS BETTER
-n=3
+   
+#Declarations
+n=400
 nosofmatrices=20
 unique_people = 5
 similar_faces = 4
+
 img = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 
 # Opening the image
 for i in range(0,5):
    for j in range(0,4):
-      print(i," ",j)
       img_path = "sampleimg/img"+ str(i+1)+ "." + str(j+1) + ".jpg"
       img[i][j] = Image.open(img_path)
-
+      img[i][j] = img[i][j].resize((n,n))
+        
 # Converting to Grayscale
 img_grey = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 for i in range(0,5):
@@ -24,76 +25,64 @@ for i in range(0,5):
       img_grey[i][j] = ImageOps.grayscale(img[i][j])
       
 # Converting the image to NxN matrix
+b_1 = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 b = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 for i in range(0,unique_people):
    for j in range(0,similar_faces):
-      b[i][j] = np.array(img_grey[i][j])
-
-  
+      b_1[i][j] = np.array(img_grey[i][j])
+      plt.imshow(b_1[i][j], interpolation='nearest')
+      #plt.show()
+# Converting the NxN matrix to (N^2)x1 matrix
 for i in range(0,unique_people):
    for j in range(0,similar_faces):
-      print("b=",b[i][j])
+      b[i][j]=b_1[i][j].reshape((n*n,1))
 
-# Converting the NxN matrix to N^2x1 matrix
-b_reshape = [[0 for x in range(similar_faces)] for y in range(unique_people)]
+# The dataset is put into a single matrix A, which would be decomposed
+#TODO Use a loop here instead of manual input
+aMatrix=np.column_stack((b[0][0],b[0][1],b[0][2],b[0][3],b[1][0],b[1][1],b[1][2],b[1][3],b[2][0],b[2][1],b[2][2],b[2][3],b[3][0],b[3][1],b[3][2],b[3][3],b[4][0],b[4][1],b[4][2],b[4][3]))
+# print(aMatrix)
+
+# Calculating the Mean Matrix
+bMean=[[0 for x in range(n*n)] for y in range(unique_people)]
 for i in range(0,unique_people):
+   bMean[i]=0
    for j in range(0,similar_faces):
-      b_reshape[i][j] = b[i][j].reshape((n*n,1))
-      print("reshaped = ",b_reshape[i][j])
+      bMean[i]+=(b[i][j])/similar_faces
+# print(bMean[0])
 
-# Calculating the mean matrix
-sum = 0
-# for i in range()
-#TODO:Use for loop instead of column_stack
-b1_=b1_new-meanmatrix
-b2_=b2_new-meanmatrix
-b3_=b3_new-meanmatrix
-b4_=b4_new-meanmatrix
-aMatrix=np.column_stack((b1_,b2_,b3_,b4_))
-#print(meanmatrix)
+#Average faces of each individual 
+for i in range (0,unique_people):
+   b1mean=bMean[i].reshape([n,n],order='F')
+   b1meanImg=Image.fromarray(b1mean)
+   b1meanImg.show()
 
-#print("A matrix: \n",aMatrix)
-
-
-#Displays the Eigenfaced
-
-# plt.imshow(b1new, interpolation='nearest')
-# plt.show()
-#img1.show()
-
-plt.imshow(b1, cmap='gray',vmin=0, vmax=255)
-plt.show()
-# plt.imshow(meanmatrix, cmap='gray',vmin=0, vmax=255)
-# plt.show()
-plt.imshow(meandisplay, cmap='gray',vmin=0, vmax=50)
-plt.show()
-
-#Get transpose of aMatrix
+#Calculating the transpose of aMatrix
 p = nosofmatrices
 q = n*n
 aMatrix_T = np.zeros((p,q))
 for i in range(0,p):
     for j in range(0,q):
         aMatrix_T[i][j] = aMatrix[j][i]
-#print("TRANSPOSE: \n",aMatrix_T)
+print("ORIGINAL MATRIX IS: \n",aMatrix)         
+print("TRANSPOSE MATRIX IS: \n",aMatrix_T)         
 
-#A*A_t
+#Covariance Matrix=A_t*A
 p = nosofmatrices
 q = n*n
-multiply = np.zeros((nosofmatrices,nosofmatrices))
+covarianceMat = np.zeros((nosofmatrices,nosofmatrices))
 sum=0
 for i in range(0,p):
-           for j in range(0,p):
-              for k in range (0,q):
-                 sum = sum + aMatrix_T[i][k] * aMatrix[k][j]
-              multiply[i][j] = sum
-              sum=0
-#print("A*A_T: \n",multiply)
-#plt.imshow(multiply, interpolation='nearest')
+   for j in range(0,p):
+      for k in range (0,q):
+         sum = sum + aMatrix_T[i][k] * aMatrix[k][j]
+      covarianceMat[i][j] = sum
+      sum=0
+#print("A_T*A: \n",covarianceMat)
+#plt.imshow(covarianceMat, interpolation='nearest')
 #plt.show()
 
 #SVD
-AtA = multiply
+AtA = covarianceMat
 n= nosofmatrices
 d = np.zeros((nosofmatrices,nosofmatrices))
 s = np.zeros((nosofmatrices,nosofmatrices))
@@ -102,7 +91,6 @@ s1t = np.zeros((nosofmatrices,nosofmatrices))
 temp = np.zeros((nosofmatrices,nosofmatrices))
 zero= 1e-4
 pi = 3.141592654
-#zero=1e-4
 for i in range (0,n):
  for j  in range(0,n):
    d[i][j]=AtA[i][j]
@@ -231,15 +219,44 @@ while(flag==1):
          if(i!=j):
             if(math.fabs(d[i][j] > zero)):
                flag=1
-
-
-print("The eigenvalues are \n")
-sigmaMatrix=d.sqrt()
-print("The Sigma Matrix is "+sigmaMatrix)
-print("\nThe corresponding eigenvectors are \n")
+print("eigen values are:")
+for i in range(0,nosofmatrices):
+   print(d[i][i])
+sigmaMatrix=np.sqrt(d)
+#print("The Sigma Matrix is ",sigmaMatrix)
+# print("\nThe corresponding eigenvectors are \n")
 #TODO Why is i in range (0,n) instead of range (0,numberOfUniquePeople)
-for j in range(0,n):
-   print("Eigen Vector->", j+1)
-   for i in range(0,n):
-      print(s[i][j])
-   print("\n")
+# for j in range(0,n):
+#    print("Eigen Vector->", j+1)
+#    for i in range(0,n):
+#       print(s[i][j])
+#    print("\n")
+V = np.zeros((nosofmatrices,nosofmatrices))
+for i in range(0,nosofmatrices):
+   for j in range(0,nosofmatrices):
+      V[i][j] = s[i][j]
+# print("V=", V)
+
+#Calculating the Projections of each Unique face
+bMeanT = [[0 for x in range(unique_people)] for y in range(n*n)]
+projectionMatrix=[[0 for x in range(unique_people*similar_faces)] for y in range(1)]
+
+# for i in range(0,unique_people):
+#    bMean[i] = np.array(bMean[i])
+#    p = 1
+#    q = unique_people*similar_faces
+#    bMeanT = np.zeros((p,q))
+# print(p, q, bMean[0])
+for i in range(0, unique_people):
+   bMean[i] = np.asarray(bMean[i])
+
+print('sjdfn\n', type(bMean))
+
+for i in range(0,p):
+   for j in range(0,q):
+      print(i," ",j)
+      bMeanT[i][j] = bMean[j][i]
+   print(bMean[i].shape)
+   print(V.shape)
+   projectionMatrix[i]=np.matmul(bMeanT,V)
+print("The projections are: ",projectionMatrix)
