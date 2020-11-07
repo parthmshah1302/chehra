@@ -26,14 +26,13 @@ for i in range(0,5):
       
 # Converting the image to NxN matrix
 b_1 = [[0 for x in range(similar_faces)] for y in range(unique_people)]
-b = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 for i in range(0,unique_people):
    for j in range(0,similar_faces):
       b_1[i][j] = np.array(img_grey[i][j])
       plt.imshow(b_1[i][j], interpolation='nearest')
-      #plt.show()
 
 # Converting the NxN matrix to (N^2)x1 matrix
+b = [[0 for x in range(similar_faces)] for y in range(unique_people)]
 for i in range(0,unique_people):
    for j in range(0,similar_faces):
       b[i][j]=b_1[i][j].reshape((n*n,1))
@@ -49,13 +48,10 @@ for i in range(0,unique_people):
    bMean[i]=0
    for j in range(0,similar_faces):
       bMean[i]+=(b[i][j])/similar_faces
-# print(bMean[0])
-
-#Average faces of each individual 
-# TODO for i in range (0,unique_people):
-#    b1mean=bMean[i].reshape([n,n],order='F')
-#    b1meanImg=Image.fromarray(b1mean)
-#    b1meanImg.show()
+   #Average faces of each individual 
+   b1mean= np.reshape(bMean[i],(n,n))
+   b1meanImg=Image.fromarray(b1mean)
+   b1meanImg.show()
 
 #Calculating the transpose of aMatrix
 p = nosofmatrices
@@ -82,7 +78,7 @@ for i in range(0,p):
 #plt.imshow(covarianceMat, interpolation='nearest')
 #plt.show()
 
-Decomposing the Covariance using SVD
+#Decomposing the Covariance using SVD
 AtA = covarianceMat
 n= nosofmatrices
 d = np.zeros((nosofmatrices,nosofmatrices))
@@ -235,18 +231,11 @@ sigmaMatrix = np.zeros((nosofmatrices,nosofmatrices))
 print("eigen values are:")
 for i in range(0,nosofmatrices):
    print(d[i][i])
-   # if(d[i][i]<0):
-   #    d[i][i] *= (-1)
-   # sigmaMatrix[i][j] = math.sqrt(d[i][i])
-   # print(sigmaMatrix[i][j])
+   if(d[i][i]<0):
+       d[i][i] *= (-1)
+   sigmaMatrix[i][j] = math.sqrt(d[i][i])
+   print(sigmaMatrix[i][j])
 
-#print("The Sigma Matrix is ",sigmaMatrix)
-# print("\nThe corresponding eigenvectors are \n")
-# for j in range(0,n):
-#    print("Eigen Vector->", j+1)
-#    for i in range(0,n):
-#       print(s[i][j])
-#    print("\n")
 V = np.zeros((nosofmatrices,nosofmatrices)) 
 for i in range(0,nosofmatrices):
    for j in range(0,nosofmatrices):
@@ -267,13 +256,36 @@ projectionMatrix=[[0 for x in range(unique_people*similar_faces)] for y in range
 for i in range(0, unique_people):
    bMean[i] = np.asarray(bMean[i])
 
-print('sjdfn\n', type(bMean))
+# for i in range(0,p):
+#    for j in range(0,q):
+#       bMeanT[i][j] = bMean[j][i]
+#    print(bMean[i].shape)
+#    print(V.shape)
+#    projectionMatrix[i]=np.matmul(bMeanT,V)
+# print("The projections are: ",projectionMatrix)
 
-for i in range(0,p):
-   for j in range(0,q):
-      print(i," ",j)
-      bMeanT[i][j] = bMean[j][i]
-   print(bMean[i].shape)
-   print(V.shape)
-   projectionMatrix[i]=np.matmul(bMeanT,V)
-print("The projections are: ",projectionMatrix)
+#consider the input image as img
+# Storing the training set
+
+# img_path = "sampleimg/img"+ str(i+1)+ "." + str(j+1) + ".jpg"
+# img = Image.open(img_path)
+# img = img.resize((n,n))
+        
+# # Converting to Grayscale
+# img_grey = ImageOps.grayscale(img)
+      
+# # Converting the image to NxN matrix
+# b_1 = np.array(img_grey[i][j])
+# plt.imshow(b_1[i][j], interpolation='nearest')
+
+#finding its projection
+# inp_projection = np.zeros((1,nosofmatrices))
+# p=1
+# q=nosofmatrices
+# sum=0
+# for i in range(0,p):
+#    for j in range(0,p):
+#       for k in range (0,q):
+#          sum = sum + aMatrix_T[i][k] * aMatrix[k][j]
+#       inp_projection[i][j] = sum
+#       sum=0
